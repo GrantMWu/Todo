@@ -1,0 +1,46 @@
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    display: grid;
+    grid-template-columns: 20vw auto;
+}
+
+#sidebar {
+    width: 20vw;
+    border: 1px solid black;
+
+    display: grid;
+}
+
+#main {
+    grid-column-start: 2;
+    border: 1px solid black;
+
+    display: flex;
+    flex-direction: column;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+#header {
+    margin-bottom: 20px;
+    grid-row-start: 1;
+    display: inline;
+}
+
+/* todo formatting */
+
+.todo {
+    display: flex;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-top: 20px;
+    padding: 20px;
+
+}
+
+.taskName {
+    flex-grow: 1;
+}

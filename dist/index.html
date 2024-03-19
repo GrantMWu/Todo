@@ -7,6 +7,22 @@
     <script src="main.js" defer></script>   
 </head>
 <body>
+    <div id="sidebar">
+        <button id="newProject">Sidebar (Todo)</button>
+    </div>
+    <div id="main">
+        <div id="header">
+            <h1 id="project">Todo List</h1>
+        </div>
+
+        <div id="content">
+            <button id="newTask">New Task</button>
+            <div id="taskList">
+            </div>
+
+        </div>
+    </div>
+    
     <dialog id="taskDialog">
         <form method="dialog">
             <div class="entries">
@@ -24,24 +40,15 @@
                 </div>
                 <div class="entry">
                     <label for="priority">Priority</label>
-                    <input type="checkbox" name="priority" id="priority" placeholder="priority" required />
+                    <input type="checkbox" name="priority" id="priority" placeholder="priority" />
                 </div>
             </div>
-
+    
             <div class="buttons">
                 <button type="button" id="cancel" value="cancel" formmethod="dialog">Cancel</button>
                 <button type="submit" id="addTask" value="addTask">Add task</button>
             </div>
         </form>
     </dialog>
-
-    <div>
-        <button id="newTask">New Task</button>
-    </div>
-
-    <ul id="taskList">
-
-    </ul>
-    
 </body>
 </html>
