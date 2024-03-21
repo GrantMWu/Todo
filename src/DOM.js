@@ -46,9 +46,6 @@ export default function DOMHandler() {
     }
 
     const deleteTodo = (task) => {
-        // let todo = e.target.parentElement.parentElement
-        // todo.remove()
-        //console.log(tasks.array.indexOf(task))
         let index = tasks.array.indexOf(task)
         tasks.removeTask(index)
         update()
@@ -76,13 +73,18 @@ export default function DOMHandler() {
         // Form cancel button closes the dialog box
         cancelButton.addEventListener("click", () => {
           dialog.close();
+          document.querySelector("form").reset()
         });
 
         //add new task to list
         addTaskButton.addEventListener("click", (event) => {
-            event.preventDefault
-            tasks.addTask(title.value, description.value, dueDate.value, priority.value)
-            update()
+            event.preventDefault()
+            if (title.validity.valid && description.validity.valid && dueDate.validity.valid) {
+                tasks.addTask(title.value, description.value, dueDate.value, priority.value)
+                update()
+                document.querySelector("form").reset()
+                dialog.close()
+            }
         })
     }
 
