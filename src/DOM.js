@@ -13,7 +13,7 @@ export default function DOMHandler() {
     const createEditButton = (task) => {
         const editButton = document.createElement("button")
         editButton.classList.add("editButton")
-        editButton.textContent = "edit"
+        editButton.innerHTML = "<i class='fa fa-edit'></i>"
         editButton.addEventListener('click', function() {
             editTodo(task)
         })
@@ -59,7 +59,7 @@ export default function DOMHandler() {
     const createDeleteButton = (task) => {
         const deleteButton = document.createElement("button")
         deleteButton.classList.add("deleteButton")
-        deleteButton.textContent = "delete"
+        deleteButton.innerHTML = '<i class="fa fa-trash-o" aria-hidden="true"></i>'
         deleteButton.addEventListener('click', function () {
             deleteTodo(task)
         })
@@ -82,7 +82,7 @@ export default function DOMHandler() {
         taskName.textContent = task.title
 
         let buttons = document.createElement("div")
-        buttons.classList.add("buttons")
+        buttons.classList.add("todoButtons")
 
         const editButton = createEditButton(task)
         const deleteButton = createDeleteButton(task)
