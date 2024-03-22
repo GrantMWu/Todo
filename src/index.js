@@ -3,5 +3,4 @@ import DOMHandler from './DOM.js'
 import './styles/style.css'
 
 let DOM = DOMHandler()
-DOM.setupModal()
-
+DOM.renderMain()

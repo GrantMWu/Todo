@@ -23,16 +23,15 @@
         </div>
     </div>
     
-    <dialog id="taskDialog">
+    <dialog id="newTaskDialog">
         <form method="dialog">
             <div class="entries">
                 <div class="entry">
                     <label for="title">Task</label>
                     <input type="text" name="title" id="title" placeholder="title" required />
-                </di>
+                </div>
                 <div class="entry">
                     <label for="description">Description</label>
-                    <!-- <input type="text" name="description" id="description" placeholder="description" required /> -->
                     <textarea id="description" name="description" placeholder="description" cols="39" rows="10"></textarea>
 
                 </div>
@@ -53,6 +52,39 @@
             <div class="buttons">
                 <button type="button" id="cancel" value="cancel" formmethod="dialog">Cancel</button>
                 <button type="submit" id="addTask" value="addTask">Add task</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="editDialog">
+        <form method="dialog">
+            <div class="entries">
+                <div class="entry">
+                    <label for="title">Task</label>
+                    <input type="text" name="title" id="editTitle" placeholder="title" required />
+                </div>
+                <div class="entry">
+                    <label for="description">Description</label>
+                    <textarea  name="description" id="editDescription" placeholder="description" cols="39" rows="10"></textarea>
+
+                </div>
+                <div class="entry">
+                    <label for="dueDate">Due date</label>
+                    <input type="date" name="dueDate" id="editDueDate" required />
+                </div>
+                <div class="entry">
+                    <label for="priority">Priority</label>
+                    <select name="priority" id="editPriority">
+                        <option value="">--Please choose an option--</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>             
+            </div>
+    
+            <div class="buttons">
+                <button type="button" id="editCancel" value="cancel" formmethod="dialog">Cancel</button>
+                <button type="submit" id="update" value="addTask">Update</button>
             </div>
         </form>
     </dialog>

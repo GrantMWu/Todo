@@ -9,7 +9,12 @@ export default function createList() {
       array.splice(index, 1)
     } 
 
-    return {array, addTask, removeTask}
+    const editTask = (title, description, date, priority, index) => {
+        const editedTask = {title,description, date, priority}
+        array.splice(index, 1, editedTask)
+    }
+
+    return {array, addTask, removeTask, editTask}
 }
 
 
