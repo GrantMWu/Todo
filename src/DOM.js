@@ -1,8 +1,9 @@
 import createList from "./list.js"
+import checkStorage from "./storage.js"
 
 export default function DOMHandler() {
     const taskList = document.querySelector("#taskList")
-    const tasks = createList();
+    const tasks = createList() 
 
     const clearList = () => {
         while(taskList.firstChild){
@@ -32,6 +33,7 @@ export default function DOMHandler() {
         description.value = task.description
         dueDate.value = task.date
         priority.value = task.priority
+        let index = tasks.array.indexOf(task)
      
         dialog.showModal()
 
@@ -47,7 +49,13 @@ export default function DOMHandler() {
             event.preventDefault()
 
             if (title.validity.valid && description.validity.valid && dueDate.validity.valid) {
-                tasks.editTask(title.value, description.value, dueDate.value, priority.value)
+                let editedTask = {
+                    title: title.value,
+                    description: description.value,
+                    date: dueDate.value,
+                    priority: priority.value
+                }
+                tasks.editTask(editedTask, index)
                 update()
                 document.querySelector("form").reset()
                 dialog.close()
@@ -129,40 +137,24 @@ export default function DOMHandler() {
         addTaskButton.addEventListener("click", (event) => {
             event.preventDefault()
             if (title.validity.valid && description.validity.valid && dueDate.validity.valid) {
-                tasks.addTask(title.value, description.value, dueDate.value, priority.value)
+                newTask =  {
+                    title: title.value, 
+                    description: description.value, 
+                    date: dueDate.value, 
+                    priority: priority.value
+                }
+
+                tasks.addTask(newTask)
                 update()
                 document.querySelector("form").reset()
                 dialog.close()
             }
         })
+
+        update()
     }
 
-    //try to fit the setting up modal logic here
-    const setupModal = () => {
-        const cancelButton = document.getElementById("cancel");
-        const addTaskButton = document.getElementById("addTask")
-        const dialog = document.getElementById("taskDialog");
-        
-        // Form cancel button closes the dialog box
-        cancelButton.addEventListener("click", () => {
-          dialog.close();
-          document.querySelector("form").reset()
-        });
-
-        //add new task to list
-        addTaskButton.addEventListener("click", (event) => {
-            event.preventDefault()
-            if (title.validity.valid && description.validity.valid && dueDate.validity.valid) {
-                tasks.addTask(title.value, description.value, dueDate.value, priority.value)
-                update()
-                document.querySelector("form").reset()
-                dialog.close()
-            }
-        })
-    }
-
-
-    return {setupModal, clearList, update, renderMain}
+    return {clearList, update, renderMain}
 
 }
     
