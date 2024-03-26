@@ -1,14 +1,23 @@
 import createList from "./list.js"
-import checkStorage from "./storage.js"
 
 export default function DOMHandler() {
     const taskList = document.querySelector("#taskList")
-    const tasks = createList() 
+    const projectList = document.querySelector('#projectList')
+    const tasks = createList("demo task")
+    const projects = []
+    
+    const update = (listElement, createItem, listArray) => {
+        clearList(listElement);
+        listArray.forEach(function (item) {
+            createItem(item);
+        })
+    }
 
-    const clearList = () => {
-        while(taskList.firstChild){
-            taskList.removeChild(taskList.firstChild);
+    const clearList = (listElement) => {
+        while(listElement.firstChild){
+            listElement.removeChild(listElement.firstChild);
         }
+
     }
 
     const createEditButton = (task) => {
@@ -56,7 +65,7 @@ export default function DOMHandler() {
                     priority: priority.value
                 }
                 tasks.editTask(editedTask, index)
-                update()
+                update(taskList, createListItem, tasks.array)
                 document.querySelector("form").reset()
                 dialog.close()
             }
@@ -78,7 +87,7 @@ export default function DOMHandler() {
     const deleteTodo = (task) => {
         let index = tasks.array.indexOf(task)
         tasks.removeTask(index)
-        update()
+        update(taskList, createListItem, tasks.array)
     }
 
     const createListItem = (task) => {
@@ -103,27 +112,30 @@ export default function DOMHandler() {
         console.log("added")
     }
 
+    const createProjectItem = (projectElement) => {
+        let project = document.createElement("li");
+        project.classList.add("project");
+        project.textContent = projectElement
 
-    const update = () => {
-        clearList();
-        tasks.array.forEach(function (task) {
-            createListItem(task);
-        })
+        const projectList = document.querySelector("#projectList");
+        projectList.appendChild(project)
     }
+
+
 
     const renderMain = () => {
         const title = document.querySelector("#title")
         const description = document.querySelector("#description")
         const dueDate = document.querySelector("#dueDate")
         const priority = document.querySelector("#priority")
-        const updateButton = document.getElementById("newTask");
+        const newTaskButton = document.getElementById("newTask");
         const cancelButton = document.getElementById("cancel");
         const addTaskButton = document.getElementById("addTask")
         const dialog = document.getElementById("newTaskDialog");
         dialog.returnValue = "task";
         
         // Update button opens a modal dialog
-        updateButton.addEventListener("click", () => {
+        newTaskButton.addEventListener("click", () => {
           dialog.showModal();
         });
         
@@ -145,16 +157,47 @@ export default function DOMHandler() {
                 }
 
                 tasks.addTask(newTask)
-                update()
+                update(taskList, createListItem, tasks.array)
                 document.querySelector("form").reset()
                 dialog.close()
             }
         })
 
-        update()
+        update(taskList, createListItem, tasks.array)
     }
 
-    return {clearList, update, renderMain}
+    const renderSide = () => {
+        const dialog = document.querySelector("#projectDialog")
+        const cancelButton = document.querySelector("#projectCancel")
+        const addProjectButton = document.querySelector('#addProject')
+        const newProjectButton = document.querySelector("#newProject")
+        const projectTitle = document.querySelector("#projectTitle")
+        const projectDescription = document.querySelector("#projectDescription")
+
+        newProjectButton.addEventListener('click', () => {
+            dialog.showModal();
+        })
+
+        cancelButton.addEventListener("click", () => {
+            dialog.close();
+            document.querySelector("#projectForm").reset()
+        });
+
+        addProjectButton.addEventListener('click', (event) => {
+            event.preventDefault()
+            if (projectTitle.validity.valid && projectDescription.validity.valid) {
+                projects.push(projectTitle.value)
+                console.log(projects)
+                update(projectList, createProjectItem, projects)
+                document.querySelector("#projectForm").reset()
+                dialog.close()
+            }
+
+        })
+
+    }
+
+    return {clearList, update, renderMain, renderSide}
 
 }
     

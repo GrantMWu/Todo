@@ -1,5 +1,3 @@
-import createList from "./list.js"
-
 export default function dataBase() {
     const getData = () => {
         let tasksArray;

@@ -9,7 +9,19 @@
 </head>
 <body>
     <div id="sidebar">
-        <button id="newProject">Sidebar (Todo)</button>
+        <div id="feed">
+            <ul id="feed-list">
+                <li id="today">Today</li>
+                <li>Week Outlook</li>
+                <li>High Priority</li>
+                <li>All Tasks</li>
+            </ul>
+        </div>
+        <div id="projects">
+            <h2>Projects</h2>
+            <ul id="projectList"></ul>
+        </div>
+        <button id="newProject">New Project</button>
     </div>
     <div id="main">
         <div id="header">
@@ -86,6 +98,27 @@
             <div class="buttons">
                 <button type="button" id="editCancel" value="cancel" formmethod="dialog">Cancel</button>
                 <button type="submit" id="update" value="addTask">Update</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog id="projectDialog">
+        <form id="projectForm" method="dialog">
+            <div class="entries">
+                <div class="entry">
+                    <label for="title">Project Name</label>
+                    <input type="text" name="title" id="projectTitle" placeholder="Project title" required />
+                </div>
+                <div class="entry">
+                    <label for="description">Description</label>
+                    <textarea  name="description" id="projectDescription" placeholder="what is the purpose of this project?" cols="39" rows="10"></textarea>
+
+                </div>          
+            </div>
+    
+            <div class="buttons">
+                <button type="button" id="projectCancel" value="cancel" formmethod="dialog">Cancel</button>
+                <button type="submit" id="addProject" value="addProject">Create Project</button>
             </div>
         </form>
     </dialog>
