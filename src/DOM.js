@@ -3,27 +3,30 @@ import createList from "./list.js"
 export default function DOMHandler() {
     const taskList = document.querySelector("#taskList")
     const projectList = document.querySelector('#projectList')
-    const tasks = createList("demo task")
-    const projects = []
+    const tasks = createList("demo")
+    const projects = createList('projects')
     
-    const update = (listElement, createItem, listArray) => {
+    //updates a list by taking in a HTML element to update and a list object that is updating
+    const update = (listElement, createItemFunction, listObj) => {
         clearList(listElement);
-        listArray.forEach(function (item) {
-            createItem(item);
+        listObj.array.forEach(function (item) {
+            createItemFunction(item, listElement, createItemFunction, listObj);
         })
     }
 
+    //accepts HTML element as input and clears all children Element
     const clearList = (listElement) => {
         while(listElement.firstChild){
             listElement.removeChild(listElement.firstChild);
         }
-
     }
 
     const createEditButton = (task) => {
         const editButton = document.createElement("button")
         editButton.classList.add("editButton")
         editButton.innerHTML = "<i class='fa fa-edit'></i>"
+        
+        //move this event listener to the actual function that creates it?
         editButton.addEventListener('click', function() {
             editTodo(task)
         })
@@ -65,7 +68,7 @@ export default function DOMHandler() {
                     priority: priority.value
                 }
                 tasks.editTask(editedTask, index)
-                update(taskList, createListItem, tasks.array)
+                update(taskList, createListItem, tasks)
                 document.querySelector("form").reset()
                 dialog.close()
             }
@@ -73,24 +76,24 @@ export default function DOMHandler() {
 
     }
 
-    const createDeleteButton = (task) => {
+    const createDeleteButton = (task, listElement, createItem, list) => {
         const deleteButton = document.createElement("button")
         deleteButton.classList.add("deleteButton")
         deleteButton.innerHTML = '<i class="fa fa-trash-o" aria-hidden="true"></i>'
         deleteButton.addEventListener('click', function () {
-            deleteTodo(task)
+            deleteTodo(task, listElement, createItem, list)
         })
 
         return deleteButton
     }
     
-    const deleteTodo = (task) => {
-        let index = tasks.array.indexOf(task)
-        tasks.removeTask(index)
-        update(taskList, createListItem, tasks.array)
+    const deleteTodo = (item, listElement, createItem, list) => {
+        let index = list.array.indexOf(item)
+        list.removeTask(index)
+        update(listElement, createItem, list)
     }
 
-    const createListItem = (task) => {
+    const createListItem = (task, listElement, createItem, list) => {
         let todo = document.createElement("div");
         todo.classList.add("todo")
 
@@ -101,27 +104,35 @@ export default function DOMHandler() {
         let buttons = document.createElement("div")
         buttons.classList.add("todoButtons")
 
-        const editButton = createEditButton(task)
-        const deleteButton = createDeleteButton(task)
+        const editButton = createEditButton(task, listElement, createItem, list)
+        const deleteButton = createDeleteButton(task, listElement, createItem, list)
 
         buttons.appendChild(editButton)
         buttons.appendChild(deleteButton)
         todo.appendChild(taskName)
         todo.appendChild(buttons)
-        taskList.appendChild(todo);
-        console.log("added")
+        listElement.appendChild(todo);
     }
 
-    const createProjectItem = (projectElement) => {
-        let project = document.createElement("li");
-        project.classList.add("project");
-        project.textContent = projectElement
+    const createProjectItem = (project, listElement, createItem, list) => {
+        let projectCont = document.createElement("li");
+        projectCont.classList.add("project");
+
+        let projectName = document.createElement('div')
+        projectName.textContent = project
+
+        let buttons = document.createElement('div')
+        buttons.classList.add('projectButtons')
+
+        const deleteButton = createDeleteButton(project, listElement, createItem, list)
+        buttons.appendChild(deleteButton)
+
+        projectCont.appendChild(projectName)
+        projectCont.appendChild(buttons)
 
         const projectList = document.querySelector("#projectList");
-        projectList.appendChild(project)
+        projectList.appendChild(projectCont)
     }
-
-
 
     const renderMain = () => {
         const title = document.querySelector("#title")
@@ -157,13 +168,13 @@ export default function DOMHandler() {
                 }
 
                 tasks.addTask(newTask)
-                update(taskList, createListItem, tasks.array)
+                update(taskList, createListItem, tasks)
                 document.querySelector("form").reset()
                 dialog.close()
             }
         })
 
-        update(taskList, createListItem, tasks.array)
+        update(taskList, createListItem, tasks)
     }
 
     const renderSide = () => {
@@ -186,8 +197,8 @@ export default function DOMHandler() {
         addProjectButton.addEventListener('click', (event) => {
             event.preventDefault()
             if (projectTitle.validity.valid && projectDescription.validity.valid) {
-                projects.push(projectTitle.value)
-                console.log(projects)
+                projects.addTask(projectTitle.value)
+                console.log(projects.array)
                 update(projectList, createProjectItem, projects)
                 document.querySelector("#projectForm").reset()
                 dialog.close()
@@ -195,6 +206,7 @@ export default function DOMHandler() {
 
         })
 
+        update(projectList, createProjectItem, projects)
     }
 
     return {clearList, update, renderMain, renderSide}

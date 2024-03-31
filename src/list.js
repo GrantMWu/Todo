@@ -1,23 +1,22 @@
 import dataBase from './storage.js'
 
 export default function createList(title) {
-    //let db = dataBase()
-    //let array = db.getData()
-    let array = [];
+    let db = dataBase()
+    let array = db.getData(title)
 
     const addTask = (todo) => {
       array.push(todo)
-      //db.saveData(array)
+      db.saveData(title, array)
     }
 
     const removeTask =  (index) => {
       array.splice(index, 1)
-      //db.saveData(array)
+      db.saveData(title, array)
     } 
 
     const editTask = (editedTask, index) => {
         array.splice(index, 1, editedTask)
-        //db.saveData(array)
+        db.saveData(title, array)
     }
 
     return {array, addTask, removeTask, editTask, title}

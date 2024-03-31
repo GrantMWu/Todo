@@ -1,23 +1,22 @@
 export default function dataBase() {
-    const getData = () => {
-        let tasksArray;
-    
-        if(!localStorage.getItem('tasks')) {
-            tasksArray = []
-            localStorage.setItem('tasks', JSON.stringify(tasksArray))
+
+    const getData = (dataName) => {
+        let data;
+        
+        if(!localStorage.getItem(dataName)) {
+            data = []
+            saveData(dataName, data)
         } else {
-            tasksArray = JSON.parse(localStorage.getItem('tasks'))
+            data = JSON.parse(localStorage.getItem(dataName))
         }
     
-        return tasksArray
+        return data
     }
 
-    const saveData = (tasksArray) => {
-        localStorage.setItem('tasks', JSON.stringify(tasksArray))
+    const saveData = (dataName, data) => {
+        localStorage.setItem(dataName, JSON.stringify(data))
     }
 
     return {getData, saveData}
 
 }
-
-//return { getData }
