@@ -17,6 +17,10 @@ export default function dataBase() {
         localStorage.setItem(dataName, JSON.stringify(data))
     }
 
-    return {getData, saveData}
+    const deleteData = (dataName) => {
+        localStorage.removeItem(dataName)
+    }
+
+    return {getData, saveData, deleteData}
 
 }

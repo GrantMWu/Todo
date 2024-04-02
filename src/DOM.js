@@ -3,8 +3,9 @@ import createList from "./list.js"
 export default function DOMHandler() {
     const taskList = document.querySelector("#taskList")
     const projectList = document.querySelector('#projectList')
-    const tasks = createList("demo")
+    let tasks;
     const projects = createList('projects')
+
     
     //updates a list by taking in a HTML element to update and a list object that is updating
     const update = (listElement, createItemFunction, listObj) => {
@@ -21,16 +22,11 @@ export default function DOMHandler() {
         }
     }
 
-    const createEditButton = (task) => {
+    const createEditButton = () => {
         const editButton = document.createElement("button")
         editButton.classList.add("editButton")
         editButton.innerHTML = "<i class='fa fa-edit'></i>"
         
-        //move this event listener to the actual function that creates it?
-        editButton.addEventListener('click', function() {
-            editTodo(task)
-        })
-
         return editButton
     }
 
@@ -73,27 +69,23 @@ export default function DOMHandler() {
                 dialog.close()
             }
         })
-
     }
 
-    const createDeleteButton = (task, listElement, createItem, list) => {
+    const createDeleteButton = () => {
         const deleteButton = document.createElement("button")
         deleteButton.classList.add("deleteButton")
         deleteButton.innerHTML = '<i class="fa fa-trash-o" aria-hidden="true"></i>'
-        deleteButton.addEventListener('click', function () {
-            deleteTodo(task, listElement, createItem, list)
-        })
 
         return deleteButton
     }
     
-    const deleteTodo = (item, listElement, createItem, list) => {
+    const deleteItem = (item, listElement, createItem, list) => {
         let index = list.array.indexOf(item)
         list.removeTask(index)
         update(listElement, createItem, list)
     }
 
-    const createListItem = (task, listElement, createItem, list) => {
+    const createListItem = (task) => {
         let todo = document.createElement("div");
         todo.classList.add("todo")
 
@@ -104,14 +96,22 @@ export default function DOMHandler() {
         let buttons = document.createElement("div")
         buttons.classList.add("todoButtons")
 
-        const editButton = createEditButton(task, listElement, createItem, list)
-        const deleteButton = createDeleteButton(task, listElement, createItem, list)
+        const editButton = createEditButton()
+        editButton.addEventListener('click', function() {
+            editTodo(task)
+        })
+
+        //create a delete button for item
+        const deleteButton = createDeleteButton()
+        deleteButton.addEventListener('click', function () {
+            deleteItem(task, taskList, createListItem, tasks)
+        })
 
         buttons.appendChild(editButton)
         buttons.appendChild(deleteButton)
         todo.appendChild(taskName)
         todo.appendChild(buttons)
-        listElement.appendChild(todo);
+        taskList.appendChild(todo);
     }
 
     const createProjectItem = (project, listElement, createItem, list) => {
@@ -120,11 +120,22 @@ export default function DOMHandler() {
 
         let projectName = document.createElement('div')
         projectName.textContent = project
+        projectName.addEventListener('click', function() {
+            renderMain(project)
+        })
 
         let buttons = document.createElement('div')
         buttons.classList.add('projectButtons')
 
-        const deleteButton = createDeleteButton(project, listElement, createItem, list)
+        const deleteButton = createDeleteButton()
+        deleteButton.addEventListener('click', function () {
+            deleteItem(project, listElement, createItem, list)
+            localStorage.removeItem(project)
+            if (tasks.title == project) {
+                renderMain("today")
+            }
+        })
+
         buttons.appendChild(deleteButton)
 
         projectCont.appendChild(projectName)
@@ -134,7 +145,15 @@ export default function DOMHandler() {
         projectList.appendChild(projectCont)
     }
 
-    const renderMain = () => {
+    const renderMain = (project) => {
+        //change tasks
+        tasks = createList(project)
+
+        //change header
+        let header = document.getElementById("project")
+        header.textContent = project
+
+        //setup task dialog
         const title = document.querySelector("#title")
         const description = document.querySelector("#description")
         const dueDate = document.querySelector("#dueDate")
@@ -143,20 +162,16 @@ export default function DOMHandler() {
         const cancelButton = document.getElementById("cancel");
         const addTaskButton = document.getElementById("addTask")
         const dialog = document.getElementById("newTaskDialog");
-        dialog.returnValue = "task";
         
-        // Update button opens a modal dialog
         newTaskButton.addEventListener("click", () => {
           dialog.showModal();
         });
         
-        // Form cancel button closes the dialog box
         cancelButton.addEventListener("click", () => {
           dialog.close();
           document.querySelector("form").reset()
         });
 
-        //add new task to list
         addTaskButton.addEventListener("click", (event) => {
             event.preventDefault()
             if (title.validity.valid && description.validity.valid && dueDate.validity.valid) {
@@ -191,7 +206,7 @@ export default function DOMHandler() {
 
         cancelButton.addEventListener("click", () => {
             dialog.close();
-            document.querySelector("#projectForm").reset()
+            document.querySelector("form").reset()
         });
 
         addProjectButton.addEventListener('click', (event) => {
@@ -200,7 +215,7 @@ export default function DOMHandler() {
                 projects.addTask(projectTitle.value)
                 console.log(projects.array)
                 update(projectList, createProjectItem, projects)
-                document.querySelector("#projectForm").reset()
+                document.querySelector("form").reset()
                 dialog.close()
             }
 

@@ -19,7 +19,11 @@ export default function createList(title) {
         db.saveData(title, array)
     }
 
-    return {array, addTask, removeTask, editTask, title}
+    const deleteProject = () => {
+        db.deleteData(project)
+    }
+
+    return {array, addTask, removeTask, editTask, deleteProject, title}
 }
 
 
